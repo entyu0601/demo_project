@@ -2,7 +2,7 @@ package com.example.demo_project.service.impl;
 
 import com.example.demo_project.entity.Bird;
 import com.example.demo_project.service.ifs.Active;
-import com.example.demo_project.service.ifs.Service;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo_project.entity.Person;
