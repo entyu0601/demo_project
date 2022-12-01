@@ -1,6 +1,9 @@
 package com.example.demo_project;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -196,9 +199,7 @@ public class RegisterTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String mapString = objectMapper.writeValueAsString(map);
 
-		ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-				.post("/api/addRoleList")
-				.contentType(CONTENT_TYPE)
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/addRoleList").contentType(CONTENT_TYPE)
 //						.headers(headers) //
 				.content(mapString));
 
@@ -206,7 +207,7 @@ public class RegisterTest {
 
 		JacksonJsonParser jsonParser = new JacksonJsonParser();
 		Map<String, Object> resData = jsonParser.parseMap(resString);
-		Object rtnmessage = (String)resData.get("message");
+		Object rtnmessage = (String) resData.get("message");
 		System.out.println(rtnmessage);
 		Assert.isTrue(rtnmessage.equals("Success!"), "Message error!");
 
@@ -215,6 +216,56 @@ public class RegisterTest {
 		System.out.println(rtnInfo);
 
 		System.out.println(resData);
+	}
+
+	@Test
+	public void updateRegisterInfoDaoTest() {
+		int result = registerDao.updateRegisterInfo("David", 22, "¥x¥_", new Date(), "±b¸¹1");
+		System.out.println("------->>" + result);
+	}
+
+	@Test
+	public void doQueryTest() throws ParseException {
+		String dateStr = "2022-11-10";
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+		List<Register> result = registerDao.doQueryByExpiredRegTime(date);
+		System.out.println(result.size());
+		for (Register item : result) {
+			System.out.println(item.getAccount());
+		}
+	}
+
+	@Test
+	public void doQueryWithPageSizeTest() throws ParseException {
+		String dateStr = "2022-11-10";
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+		List<Register> result = registerDao.doQueryByExpiredRegTime(date, 2);
+		System.out.println(result.size());
+		for (Register item : result) {
+			System.out.println(item.getAccount());
+		}
+	}
+
+	@Test
+	public void doQueryWithStartPositionTest() throws ParseException {
+		String dateStr = "2022-11-10";
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+		List<Register> result = registerDao.doQueryByExpiredRegTime(date, -1, 2);
+		System.out.println(result.size());
+		for (Register item : result) {
+			System.out.println(item.getAccount());
+		}
+	}
+	
+	@Test
+	public void doNativeQueryTest() throws ParseException {
+		String dateStr = "2022-11-10";
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+		List<Register> result = registerDao.doNativeQueryByExpiredRegTime(date, -1, 2);
+		System.out.println(result.size());
+		for (Register item : result) {
+			System.out.println(item.getAccount());
+		}
 	}
 
 }
